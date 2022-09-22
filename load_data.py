@@ -19,7 +19,7 @@ def load_stimuli(win, config, screen_res):
         path, size = stimulus_definition
         stimuli[stimulus_name] = visual.ImageStim(
             win=win,
-            image=os.path.join("input_data", "monetary_incentive_delay", path),
+            image=os.path.join("input_data", path),
             size=size,
             name=stimulus_name,
             interpolate=True,
