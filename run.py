@@ -52,7 +52,7 @@ class Experiment:
         self.clock = core.Clock()
         self.mouse = event.Mouse(win=self.win, visible=False)
 
-    def display(self, stimulus, trigger_name=False):
+    def display(self, stimulus, trigger_name=None):
         # stimulus can be a list of stimuli or a single stimulus
         if type(stimulus) is not list:
             stimulus = [stimulus]
@@ -65,15 +65,19 @@ class Experiment:
         self.win.flip()
         if trigger_name is not None:
             self.trigger_handler.send_trigger()
-
-    def display_for_duration(self, time, stimulus, trigger_name=None):
+    
+    def stop_displaying(self, stimulus):
+        # stimulus can be a list of stimuli or a single stimulus
         if type(stimulus) is not list:
             stimulus = [stimulus]
-        self.display(stimulus, trigger_name)
-        core.wait(time)
         for s in stimulus:
             s.setAutoDraw(False)
+
+    def display_for_duration(self, time, stimulus, trigger_name=None):
+        self.display(stimulus, trigger_name)
+        core.wait(time)
         self.data_saver.check_exit()
+        self.stop_displaying(stimulus)
 
 
 def run(procedure):
