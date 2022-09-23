@@ -28,11 +28,8 @@ def read_text_from_file(file_name, insert=""):
 
 
 def show_info(
-    win,
     file_name,
-    config,
-    screen_width=None,
-    data_saver=None,
+    exp,
     insert="",
     alignText="center",
     pos=(0, 0),
@@ -47,25 +44,26 @@ def show_info(
     :param insert: extra text for read_text_from_file
     :return:
     """
+
+    screen_width = exp.screen_res["width"]
+
     hello_msg = read_text_from_file(os.path.join("messages", file_name), insert=insert)
     hello_msg = visual.TextStim(
-        win=win,
+        win=exp.win,
         antialias=True,
-        font=config["Text_font"],
+        font=exp.config["Text_font"],
         text=hello_msg,
-        height=config["Text_size"],
+        height=exp.config["Text_size"],
         wrapWidth=screen_width,
-        color=config["Text_color"],
+        color=exp.config["Text_color"],
         alignText=alignText,
         pos=pos,
     )
     hello_msg.draw()
-    win.flip()
+    exp.win.flip()
     key = event.waitKeys(keyList=["f7", "return", "space"])
     if key == ["f7"]:
-        data_saver.save_beh()
-        data_saver.save_triggers()
+        exp.data_saver.save_beh()
+        exp.data_saver.save_triggers()
         logging.critical("Experiment finished by user! {} pressed.".format(key))
         exit(1)
-
-    win.flip()
