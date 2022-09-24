@@ -9,7 +9,7 @@ import shutil
 import hashlib
 
 import yaml
-from psychopy import core, event, logging
+from psychopy import core, event, logging, clock
 
 # ERROR, WARNING, DATA, EXP, INFO and DEBUG
 # logging.console.setLevel(logging.EXP)
@@ -52,32 +52,38 @@ class Experiment:
         self.clock = core.Clock()
         self.mouse = event.Mouse(win=self.win, visible=False)
 
-    def display(self, stimulus, trigger_name=None):
+    def display_for_duration(self, time, stimulus, trigger_name=None):
         # stimulus can be a list of stimuli or a single stimulus
         if type(stimulus) is not list:
             stimulus = [stimulus]
+
+        ISI = clock.StaticPeriod() 
 
         if trigger_name is not None:
             self.trigger_handler.prepare_trigger(trigger_name)
-        for s in stimulus:
-            s.setAutoDraw(True)
+            for s in stimulus:
+                s.setAutoDraw(True)
 
-        self.win.flip()
-        if trigger_name is not None:
+            self.win.flip()
+            ISI.start(time) 
             self.trigger_handler.send_trigger()
-    
-    def stop_displaying(self, stimulus):
-        # stimulus can be a list of stimuli or a single stimulus
-        if type(stimulus) is not list:
-            stimulus = [stimulus]
-        for s in stimulus:
-            s.setAutoDraw(False)
+            ISI.complete() 
+            self.data_saver.check_exit()
+            for s in stimulus:
+                s.setAutoDraw(False)
+        else:
+            for s in stimulus:
+                s.setAutoDraw(True)
 
-    def display_for_duration(self, time, stimulus, trigger_name=None):
-        self.display(stimulus, trigger_name)
-        core.wait(time)
-        self.data_saver.check_exit()
-        self.stop_displaying(stimulus)
+            self.win.flip()
+            ISI.start(time) 
+            ISI.complete() 
+            self.data_saver.check_exit()
+            for s in stimulus:
+                s.setAutoDraw(False)
+
+
+
 
 
 def run(procedure):
