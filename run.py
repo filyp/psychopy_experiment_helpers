@@ -57,7 +57,7 @@ class Experiment:
         if type(stimulus) is not list:
             stimulus = [stimulus]
 
-        ISI = clock.StaticPeriod() 
+        ISI = clock.StaticPeriod()
 
         if trigger_name is not None:
             self.trigger_handler.prepare_trigger(trigger_name)
@@ -65,9 +65,9 @@ class Experiment:
                 s.setAutoDraw(True)
 
             self.win.flip()
-            ISI.start(time) 
+            ISI.start(time)
             self.trigger_handler.send_trigger()
-            ISI.complete() 
+            ISI.complete()
             self.data_saver.check_exit()
             for s in stimulus:
                 s.setAutoDraw(False)
@@ -76,14 +76,11 @@ class Experiment:
                 s.setAutoDraw(True)
 
             self.win.flip()
-            ISI.start(time) 
-            ISI.complete() 
+            ISI.start(time)
+            ISI.complete()
             self.data_saver.check_exit()
             for s in stimulus:
                 s.setAutoDraw(False)
-
-
-
 
 
 def run(procedure):
