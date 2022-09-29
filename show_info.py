@@ -4,7 +4,7 @@
 import os
 import codecs
 
-from psychopy import event, logging, visual
+from psychopy import event, logging, visual, core
 
 
 def read_text_from_file(file_name, insert=""):
@@ -33,6 +33,7 @@ def show_info(
     insert="",
     alignText="center",
     pos=(0, 0),
+    duration=None,
 ):
     """
     Clear way to show info message into screen.
@@ -61,9 +62,14 @@ def show_info(
     )
     hello_msg.draw()
     exp.win.flip()
-    key = event.waitKeys(keyList=["f7", "return", "space"])
-    if key == ["f7"]:
-        exp.data_saver.save_beh()
-        exp.data_saver.save_triggers()
-        logging.critical("Experiment finished by user! {} pressed.".format(key))
-        exit(1)
+    if duration is None:
+        # wait for key press
+        key = event.waitKeys(keyList=["f7", "return", "space"])
+        if key == ["f7"]:
+            exp.data_saver.save_beh()
+            exp.data_saver.save_triggers()
+            logging.critical("Experiment finished by user! {} pressed.".format(key))
+            exit(1)
+    else:
+        # wait for duration
+        core.wait(duration)
