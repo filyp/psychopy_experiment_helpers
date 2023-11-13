@@ -32,7 +32,8 @@ class TriggerHandler:
             self.data_saver.triggers_list.append(line)
 
     def send_trigger(self):
-        logging.data("TRIGGER: " + self.data_saver.triggers_list[-1])
+        logging.data("TRIGGER: " + self.trial[-1])
+        logging.flush()
         if self.port_eeg is not None:
             try:
                 self.port_eeg.setData(self.trigger_no)
@@ -41,7 +42,6 @@ class TriggerHandler:
                 time.sleep(0.005)
             except Exception as ex:
                 logging.error(ex)
-                pass
 
     def open_trial(self):
         self.trial = []
