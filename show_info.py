@@ -34,6 +34,7 @@ def show_info(
     alignText="center",
     pos=(0, 0),
     duration=None,
+    custom_text=None,
 ):
     """
     Clear way to show info message into screen.
@@ -48,7 +49,12 @@ def show_info(
 
     screen_width = exp.screen_res["width"]
 
-    hello_msg = read_text_from_file(os.path.join("messages", file_name), insert=insert)
+    if custom_text is not None:
+        hello_msg = custom_text
+    else:
+        hello_msg = read_text_from_file(
+            os.path.join("messages", file_name), insert=insert
+        )
     hello_msg = visual.TextStim(
         win=exp.win,
         antialias=True,
