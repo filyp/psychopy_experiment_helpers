@@ -35,6 +35,7 @@ def show_info(
     pos=(0, 0),
     duration=None,
     custom_text=None,
+    required_click="left",
 ):
     """
     Clear way to show info message into screen.
@@ -69,13 +70,29 @@ def show_info(
     hello_msg.draw()
     exp.win.flip()
     if duration is None:
-        # wait for key press
-        key = event.waitKeys(keyList=["f7", "return", "space"])
-        if key == ["f7"]:
-            exp.data_saver.save_beh()
-            exp.data_saver.save_triggers()
-            logging.critical("Experiment finished by user! {} pressed.".format(key))
-            exit(1)
+        
+        # wait for key press or mouse click
+        event.clearEvents()
+        exp.mouse.clickReset()
+        while True:
+            _, press_times = exp.mouse.getPressed(getTime=True)
+            keys = event.getKeys(keyList=["f7", "return", "space"])
+
+            if "f7" in keys:
+                exp.data_saver.save_beh()
+                exp.data_saver.save_triggers()
+                logging.critical("Experiment finished by user! {} pressed".format(keys))
+                exit(1)
+            if "return" in keys or "space" in keys:
+                break
+            if press_times[0] > 0 and required_click == "left":
+                break
+            if press_times[2] > 0 and required_click == "right":
+                break
+                
+            core.wait(0.030)
+            
+
     else:
         # wait for duration
         core.wait(duration)
