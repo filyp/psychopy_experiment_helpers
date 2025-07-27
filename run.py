@@ -2,6 +2,7 @@
 # how to run:
 # venv/bin/python main.py config/some_task.yaml
 
+import datetime
 import os
 import sys
 import json
@@ -97,6 +98,10 @@ def run(procedure):
         config.get("Ask_for_experiment_version", False)
     )
     config["Experiment_version"] = experiment_version
+    
+    # date and time
+    date_time = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    participant_info = participant_info + "_" + date_time
 
     data_saver = DataSaver(participant_info, experiment_name, beh=[], triggers_list=[])
     # copy config file to results folder
